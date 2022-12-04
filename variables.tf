@@ -36,3 +36,8 @@ variable "ec2_instance_type" {
 variable "pem_file_name" {
   type = string
 }
+
+# ============================= DOCKER CONFIG
+variable "docker_image_url" {
+  type = string
+}

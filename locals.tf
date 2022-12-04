@@ -37,4 +37,24 @@ locals {
       cidr_blocks = "0.0.0.0/0"
     }
   ]
+
+  /* ec2_user_data = <<EOF
+#!/bin/bash
+amazon-linux-extras enable docker
+yum install -y docker
+service docker start
+usermod -a -G docker ec2-user
+chkconfig docker on
+echo "Docker started"
+EOF */
+  ec2_user_data = <<EOF
+#! /bin/sh
+yum update -y
+amazon-linux-extras install docker
+service docker start
+usermod -a -G docker ec2-user
+chkconfig docker on
+docker pull ${var.docker_image_url}
+docker create ${var.docker_image_url}
+EOF
 }

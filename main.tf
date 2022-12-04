@@ -54,7 +54,8 @@ module "ec2" {
   vpc_security_group_ids = [module.security_group.security_group_id]
   subnet_id              = module.vpc.public_subnets[0]
 
-  key_name = aws_key_pair.key_pair.key_name
+  key_name  = aws_key_pair.key_pair.key_name
+  user_data = local.ec2_user_data
 
   depends_on = [
     aws_key_pair.key_pair
