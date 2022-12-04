@@ -8,9 +8,9 @@ output "ssh_private_key" {
 }
 
 output "save_pem" {
-  value = "cat terraform.tfstate |jq -r .outputs.ssh_private_key.value > ec2_key.pem && chmod 400 ec2_key.pem"
+  value = "cat terraform.tfstate |jq -r .outputs.ssh_private_key.value > ${var.pem_file_name} && chmod 400 ec2_key.pem"
 }
 
 output "ec2_ssh_cmd" {
-  value = "ssh ec2-user@${module.ec2.public_ip} -i ec2_key.pem"
+  value = "ssh ec2-user@${module.ec2.public_ip} -i ${var.pem_file_name}"
 }

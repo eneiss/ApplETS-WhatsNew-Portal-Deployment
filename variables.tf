@@ -10,8 +10,8 @@ variable "app" {
   type = string
 }
 
-variable "ssh_ip" {
-  type = string
+variable "ssh_allowed_ips" {
+  type = list(string)
 }
 
 # ============================= VPC
@@ -30,5 +30,9 @@ variable "public_subnets" {
 
 # ============================= EC2
 variable "ec2_instance_type" {
+  type = string
+}
+
+variable "pem_file_name" {
   type = string
 }
