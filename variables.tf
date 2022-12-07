@@ -41,3 +41,28 @@ variable "pem_file_name" {
 variable "docker_image_url" {
   type = string
 }
+
+variable "docker_image_name" {
+  type = string
+}
+
+variable "secret_files_folder_ec2" {
+  type = string
+}
+
+variable "secret_file_paths" {
+  type = list(string)
+}
+
+variable "secret_files_folder_container" {
+  type = string
+}
+
+# ============================= TESTING
+variable "test_endpoint_port" {
+  type = string
+}
+
+variable "test_endpoint_path" {
+  type = string
+}

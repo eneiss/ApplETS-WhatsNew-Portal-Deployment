@@ -14,3 +14,7 @@ output "save_pem" {
 output "ec2_ssh_cmd" {
   value = "ssh ec2-user@${module.ec2.public_ip} -i ${var.pem_file_name}"
 }
+
+output "test_endpoint" {
+  value = "${module.ec2.public_ip}:${var.test_endpoint_port}${var.test_endpoint_path}"
+}

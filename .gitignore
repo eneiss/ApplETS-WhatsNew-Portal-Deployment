@@ -40,3 +40,6 @@ terraform.rc
 
 # Terraform lock file 
 .terraform.lock.hcl
+
+# Secret files
+secrets/

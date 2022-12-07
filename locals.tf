@@ -38,23 +38,12 @@ locals {
     }
   ]
 
-  /* ec2_user_data = <<EOF
-#!/bin/bash
-amazon-linux-extras enable docker
-yum install -y docker
-service docker start
-usermod -a -G docker ec2-user
-chkconfig docker on
-echo "Docker started"
-EOF */
-  ec2_user_data = <<EOF
-#! /bin/sh
-yum update -y
-amazon-linux-extras install docker
-service docker start
-usermod -a -G docker ec2-user
-chkconfig docker on
-docker pull ${var.docker_image_url}
-docker create ${var.docker_image_url}
-EOF
+  ec2_user_data = templatefile("ec2_user_data.sh.tftpl",
+    {
+      docker_image_url              = var.docker_image_url
+      docker_image_name             = var.docker_image_name
+      secret_files_folder_ec2       = var.secret_files_folder_ec2
+      secret_file_paths             = var.secret_file_paths
+      secret_files_folder_container = var.secret_files_folder_container
+  })
 }

@@ -1,0 +1,24 @@
+#!/bin/bash
+# Install Docker
+yum update -y
+amazon-linux-extras install docker
+service docker start
+usermod -a -G docker ec2-user
+chkconfig docker on
+
+# Pull and run the container image
+docker pull ${docker_image_url}
+docker run ${docker_image_url}
+
+# Create the required secret files on the ec2 host
+mkdir ${secret_files_folder_ec2}
+%{ for path in secret_file_paths }
+cat >${path} <<EOL
+${file(path)}
+EOL
+%{ endfor }
+
+# Copy the required secret files to the container
+%{ for path in secret_file_paths }
+docker cp ${path} CONTAINER:${secret_files_folder_container}${split("/", path)[length(split("/", path)) - 1]}
+%{ endfor }
