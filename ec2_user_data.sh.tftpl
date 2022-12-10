@@ -1,24 +1,30 @@
 #!/bin/bash
-# Install Docker
+
+# Install and start Docker
 yum update -y
 amazon-linux-extras install docker
 service docker start
 usermod -a -G docker ec2-user
 chkconfig docker on
 
-# Pull and run the container image
+# Pull the container image and create an instance of it
+docker login -u ${docker_username} -p ${docker_auth_token}
 docker pull ${docker_image_url}
-docker run ${docker_image_url}
+export CONT_ID=$(docker create ${docker_image_url})
 
 # Create the required secret files on the ec2 host
-mkdir ${secret_files_folder_ec2}
+mkdir ~/tmp-transfer
+mkdir ~/tmp-transfer${secret_files_folder_ec2}
+cd ~/tmp-transfer
 %{ for path in secret_file_paths }
 cat >${path} <<EOL
-${file(path)}
+${file("secrets/${path}")}
 EOL
 %{ endfor }
 
 # Copy the required secret files to the container
-%{ for path in secret_file_paths }
-docker cp ${path} CONTAINER:${secret_files_folder_container}${split("/", path)[length(split("/", path)) - 1]}
-%{ endfor }
+docker cp . $CONT_ID:${secret_files_folder_container}
+pwd > ~/logs_user_data.txt
+
+# And run the container
+docker start $CONT_ID

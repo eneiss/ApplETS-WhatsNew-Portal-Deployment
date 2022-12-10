@@ -38,6 +38,14 @@ variable "pem_file_name" {
 }
 
 # ============================= DOCKER CONFIG
+variable "docker_username" {
+  type = string
+}
+
+variable "docker_auth_token" {
+  type = string
+}
+
 variable "docker_image_url" {
   type = string
 }

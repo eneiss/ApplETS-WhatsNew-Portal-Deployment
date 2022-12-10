@@ -40,6 +40,8 @@ locals {
 
   ec2_user_data = templatefile("ec2_user_data.sh.tftpl",
     {
+      docker_username               = var.docker_username
+      docker_auth_token             = var.docker_auth_token
       docker_image_url              = var.docker_image_url
       docker_image_name             = var.docker_image_name
       secret_files_folder_ec2       = var.secret_files_folder_ec2
