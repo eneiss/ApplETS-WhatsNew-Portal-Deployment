@@ -7,10 +7,14 @@ service docker start
 usermod -a -G docker ec2-user
 chkconfig docker on
 
+# Additional config
+sysctl net.ipv4.conf.all.forwarding=1
+iptables -P FORWARD ACCEPT
+
 # Pull the container image and create an instance of it
 docker login -u ${docker_username} -p ${docker_auth_token}
 docker pull ${docker_image_url}
-export CONT_ID=$(docker create ${docker_image_url})
+export CONT_ID=$(docker create ${docker_image_url} -p 80:80 -p 443:443)
 
 # Create the required secret files on the ec2 host
 mkdir ~/tmp-transfer
@@ -25,6 +29,13 @@ EOL
 # Copy the required secret files to the container
 docker cp . $CONT_ID:${secret_files_folder_container}
 pwd > ~/logs_user_data.txt
+
+# Docker routing
+iptables -t nat -I PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination 172.17.0.2:80 
+iptables -t nat -I PREROUTING -i eth0 -p tcp --dport 443 -j DNAT --to-destination 172.17.0.2:443
+# only if not working with the previous 2 lines
+# iptables -t nat -I OUTPUT -o lo -p tcp --dport 80 -j DNAT --to-destination 172.17.0.2:80
+# iptables -t nat -I OUTPUT -o lo -p tcp --dport 443 -j DNAT --to-destination 172.17.0.2:443
 
 # And run the container
 docker start $CONT_ID
