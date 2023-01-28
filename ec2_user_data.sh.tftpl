@@ -34,8 +34,9 @@ pwd > ~/logs_user_data.txt
 iptables -t nat -I PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination 172.17.0.2:80 
 iptables -t nat -I PREROUTING -i eth0 -p tcp --dport 443 -j DNAT --to-destination 172.17.0.2:443
 # only if not working with the previous 2 lines
-# iptables -t nat -I OUTPUT -o lo -p tcp --dport 80 -j DNAT --to-destination 172.17.0.2:80
-# iptables -t nat -I OUTPUT -o lo -p tcp --dport 443 -j DNAT --to-destination 172.17.0.2:443
+iptables -t nat -I OUTPUT -o lo -p tcp --dport 80 -j DNAT --to-destination 172.17.0.2:80
+iptables -t nat -I OUTPUT -o lo -p tcp --dport 443 -j DNAT --to-destination 172.17.0.2:443
+iptables-save
 
 # And run the container
 docker start $CONT_ID

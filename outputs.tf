@@ -8,7 +8,7 @@ output "ssh_private_key" {
 }
 
 output "save_pem" {
-  value = "cat terraform.tfstate |jq -r .outputs.ssh_private_key.value > ${var.pem_file_name} && chmod 400 ec2_key.pem"
+  value = "rm -f ${var.pem_file_name}; cat terraform.tfstate |jq -r .outputs.ssh_private_key.value > ${var.pem_file_name} && chmod 400 ec2_key.pem"
 }
 
 output "ec2_ssh_cmd" {
